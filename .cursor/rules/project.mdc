@@ -1,0 +1,34 @@
+# ArtisanLoft Furniture — Project Context
+
+## What this is
+A furniture e-commerce app being rebuilt into a real, production-grade SaaS product.
+Original version was scaffolded via Replit/Gemini and has known issues (see below).
+
+## Stack
+- Frontend: React (CRA) + Tailwind CSS, in /frontend — KEEP as-is structurally, only fix bugs
+- Backend: Python FastAPI in /backend-fastapi
+- ORM: SQLAlchemy + Alembic migrations
+- DB: MySQL
+- Auth: JWT (python-jose or PyJWT), passwords hashed with passlib[bcrypt]
+- Payments: Razorpay Python SDK, sandbox/test mode
+- Config: pydantic-settings + .env, never hardcode secrets or URLs
+
+## Non-negotiable rules
+- No hardcoded API URLs, secrets, or DB credentials in source — always env vars
+- CORS origins must be a configurable list, not a single hardcoded origin
+- All passwords must be hashed, never stored plaintext
+- Every new endpoint needs a matching pytest test
+- Match existing frontend API contract where possible: /api/products, /api/products/{id}
+- Keep responses in the same JSON shape the frontend already expects
+
+## Known bugs to fix during this rebuild
+- Orders were previously not persisted at all — must actually write to DB
+- Order history was hardcoded mock data — must fetch real orders per logged-in user
+- Cart was React state only, wiped on refresh — persist to localStorage at minimum
+- Auth was fully client-side/fake — must be real backend-verified JWT auth
+- Footer has dead links (href="#") — wire real routes or remove
+- Profile Settings buttons had no handlers
+- Wishlist button wasn't connected to the Wishlist tab
+
+## Style
+- Keep the existing earthy/stone + orange accent Tailwind design language, don't redesign visually
