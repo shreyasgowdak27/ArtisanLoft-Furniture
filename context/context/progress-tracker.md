@@ -3,9 +3,9 @@
 HOW TO USE: Read this FIRST every session. UPDATE it at the END of every session (what was done, what is next, any problems). Keep it short and accurate. Stale context is worse than none.
 
 ## Current status
-- Current phase: **Phase 3 — Authentication** (Phase 2 complete)
+- Current phase: **Phase 3 — Authentication** (Complete)
 - Last updated: 2026-10-22
-- Auth: not started. Cart: not started. Checkout/payments: not started. Admin: not started.
+- Auth backend: complete (Supabase JWT verification via JWKS + PyJWT). Auth frontend: complete (Supabase client, AuthContext, Login, Signup, Navbar, Profile with GET /me, ProtectedRoute). Cart: not started. Checkout/payments: not started. Admin: not started.
 
 ## Completed
 - [x] Phase 1: FastAPI backend (`backend-fastapi`) scaffolded; real product models/API built from old `data.sql`; React frontend connected to local FastAPI; homepage loads 30 real products end-to-end.
@@ -21,6 +21,24 @@ HOW TO USE: Read this FIRST every session. UPDATE it at the END of every session
   - SQLite file (`artisanloft.db`) deleted; all SQLite code removed
   - Frontend API URL updated: `/api/v1/products` from `http://127.0.0.1:8000`
   - `.env.example` and `.gitignore` updated; `requirements.txt` reflects async stack
+- [x] Phase 3 (Backend): Replaced custom password/token authentication with Supabase Auth JWT verification:
+  - Installed `pyjwt[crypto]` in `requirements.txt`
+  - Implemented `verify_supabase_jwt` in `app/core/security.py` using PyJWT's `PyJWKClient` against `{SUPABASE_URL}/auth/v1/.well-known/jwks.json`, enforcing RS256/ES256 and audience `authenticated`
+  - Removed custom password hashing (`passlib`, `bcrypt`) and custom token creation (`create_access_token`)
+  - Removed `/auth/signup` and `/auth/login` custom endpoints
+  - Added FastAPI dependency `get_current_user` in `app/core/deps.py` returning `CurrentUser(id, email)`
+  - Kept protected `GET /me` (mounted at `/me`, `/api/v1/me`, `/api/auth/me`) using `get_current_user`
+  - Mounted `auth_router` in `app/main.py`
+  - Added comprehensive test suite in `tests/test_auth.py` covering 401s, 200s, RS256, ES256, expired tokens, and dependency overrides (all 8 tests passing)
+- [x] Phase 3 (Frontend): Connected React frontend to Supabase Auth:
+  - Created `src/lib/supabase.js` using `createClient` with `REACT_APP_SUPABASE_URL` and `REACT_APP_SUPABASE_ANON_KEY`
+  - Refactored `AuthContext.js` to manage session/user state via `supabase.auth.signUp`, `signInWithPassword`, `signOut`, and `onAuthStateChange`
+  - Updated `Login.jsx` and `Signup.jsx` for real email/password authentication with validation and error handling
+  - Updated `Navbar.jsx` with responsive Login/Signup links or user email with Logout action
+  - Configured Axios interceptor in `api.js` to attach Supabase access token as Bearer header on API requests
+  - Updated `Profile.jsx` to call `GET /me` from the backend to verify the authenticated session
+  - Added `ProtectedRoute.jsx` component to safeguard authenticated pages
+  - Production build verified with zero errors
 
 ## In progress
 - Nothing yet.
