@@ -51,6 +51,12 @@ HOW TO USE: Read this FIRST every session. UPDATE it at the END of every session
   - Implemented `order_service.py` with atomic checkout (locks sorted by `product_id` ASC with `FOR UPDATE`, stock decrement, cart clearing, rollback on failure).
   - Implemented `orders.py` router with `POST /api/v1/orders`, `GET /api/v1/orders`, and `GET /api/v1/orders/{id}` with owner isolation (404 on unowned).
   - Full test suite in `tests/test_orders.py` verifying concurrency, locking, rollback, empty cart, stock validation, and ownership.
+- [x] Phase 5 (Checkout Frontend):
+  - Created `/checkout` page with full shipping address form, client-side validation (including 6-digit pincode), order summary with paise-to-rupee conversion, and atomic order placement via `POST /api/v1/orders` using Supabase JWT.
+  - Created `/order-success` and `/order-success/:orderId` page displaying order ID, snapshotted items, total in rupees, status badge, and immediate cart context/badge clearing.
+  - Connected "Buy Now" flow on `ProductDetail`: adds product to cart, navigates to `/checkout`, and seamlessly prompts unauthenticated users to login before returning to checkout.
+  - Wired "Proceed to Checkout" from Cart page.
+  - Robust error and loading states handling backend 400 over-stock errors with alert banners and disabled button state to prevent double submits.
 
 ## In progress
 - Phase 5: Checkout, orders, payments.
@@ -77,3 +83,4 @@ HOW TO USE: Read this FIRST every session. UPDATE it at the END of every session
 - 2026-10-22: Phase 2 complete — SQLite → Supabase Postgres. Full async stack (asyncpg + SQLAlchemy 2.0 + Alembic). 30 products seeded. End-to-end verified.
 - 2026-10-25: Built the cart backend using Supabase Postgres. Added the `cart_items` migration, atomic add route, owner scoped read and mutation routes, and tests. Migration `c3e8f941d2a0` is applied to Supabase.
 - 2026-10-27: Built the orders backend (spec 0002). Replaced legacy order.py with UUID PK + BigInteger money models (orders, order_items), Alembic migration e8d9a0b1c2d3, atomic checkout with SELECT ... FOR UPDATE locked by product_id ASC, owner-scoped queries with 404 on unowned orders, and comprehensive test suite with 30 passing tests.
+- 2026-10-27: Built the checkout and order success frontend. Integrated POST /api/v1/orders with Supabase JWT, client form validation (6-digit pincode), money conversion from paise to INR, over-stock error display, Buy Now redirect flow, and cart clearing.
