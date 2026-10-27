@@ -45,6 +45,12 @@ HOW TO USE: Read this FIRST every session. UPDATE it at the END of every session
   - ProductCard and ProductDetail "Add to Cart" buttons with login redirect and stock capping.
   - Cart page with item images, price, quantity controls, remove buttons, order summary, and loading/empty/error states.
   - Navbar cart badge reflecting real cart count.
+- [x] Phase 5 (Orders Backend): Spec 0002 implemented:
+  - Replaced legacy `order.py` with Postgres-native `Order` and `OrderItem` models with UUID PKs, BigInteger money, price/name snapshots.
+  - Added Alembic migration `e8d9a0b1c2d3` creating `orders` and `order_items` with check constraints, foreign keys, and RLS policies.
+  - Implemented `order_service.py` with atomic checkout (locks sorted by `product_id` ASC with `FOR UPDATE`, stock decrement, cart clearing, rollback on failure).
+  - Implemented `orders.py` router with `POST /api/v1/orders`, `GET /api/v1/orders`, and `GET /api/v1/orders/{id}` with owner isolation (404 on unowned).
+  - Full test suite in `tests/test_orders.py` verifying concurrency, locking, rollback, empty cart, stock validation, and ownership.
 
 ## In progress
 - Phase 5: Checkout, orders, payments.
@@ -70,3 +76,4 @@ HOW TO USE: Read this FIRST every session. UPDATE it at the END of every session
 - 2026-10-07: Defined final stack, wrote context files, installed JSM skills in Cursor.
 - 2026-10-22: Phase 2 complete — SQLite → Supabase Postgres. Full async stack (asyncpg + SQLAlchemy 2.0 + Alembic). 30 products seeded. End-to-end verified.
 - 2026-10-25: Built the cart backend using Supabase Postgres. Added the `cart_items` migration, atomic add route, owner scoped read and mutation routes, and tests. Migration `c3e8f941d2a0` is applied to Supabase.
+- 2026-10-27: Built the orders backend (spec 0002). Replaced legacy order.py with UUID PK + BigInteger money models (orders, order_items), Alembic migration e8d9a0b1c2d3, atomic checkout with SELECT ... FOR UPDATE locked by product_id ASC, owner-scoped queries with 404 on unowned orders, and comprehensive test suite with 30 passing tests.
