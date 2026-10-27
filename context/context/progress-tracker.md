@@ -3,9 +3,9 @@
 HOW TO USE: Read this FIRST every session. UPDATE it at the END of every session (what was done, what is next, any problems). Keep it short and accurate. Stale context is worse than none.
 
 ## Current status
-- Current phase: **Phase 4 — Cart** (Backend complete)
-- Last updated: 2026-10-25
-- Auth backend: complete (Supabase JWT verification via JWKS + PyJWT). Auth frontend: complete (Supabase client, AuthContext, Login, Signup, Navbar, Profile with GET /me, ProtectedRoute). Cart backend: complete with Postgres cart items, authenticated API routes, and migration `c3e8f941d2a0`. Cart frontend: not started. Checkout/payments: not started. Admin: not started.
+- Current phase: **Phase 4 — Cart** (Backend & Frontend complete)
+- Last updated: 2026-10-27
+- Auth backend: complete (Supabase JWT verification via JWKS + PyJWT). Auth frontend: complete (Supabase client, AuthContext, Login, Signup, Navbar, Profile with GET /me, ProtectedRoute). Cart backend: complete with Postgres cart items, authenticated API routes, and migration `c3e8f941d2a0`. Cart frontend: complete with API integration, ProductCard and ProductDetail Add-to-cart with auth redirection, Cart page (items, image, price, quantity controls, remove, subtotal), loading/empty/error states with over-stock error display. Checkout/payments: not started. Admin: not started.
 
 ## Completed
 - [x] Phase 1: FastAPI backend (`backend-fastapi`) scaffolded; real product models/API built from old `data.sql`; React frontend connected to local FastAPI; homepage loads 30 real products end-to-end.
@@ -39,13 +39,19 @@ HOW TO USE: Read this FIRST every session. UPDATE it at the END of every session
   - Updated `Profile.jsx` to call `GET /me` from the backend to verify the authenticated session
   - Added `ProtectedRoute.jsx` component to safeguard authenticated pages
   - Production build verified with zero errors
+- [x] Phase 4 (Cart): Backend & Frontend complete:
+  - Postgres `cart_items` table with atomic upsert and correlated product stock checks.
+  - Cart frontend wired to FastAPI backend (`/api/v1/cart`, `/api/v1/cart/items`) using Supabase JWT.
+  - ProductCard and ProductDetail "Add to Cart" buttons with login redirect and stock capping.
+  - Cart page with item images, price, quantity controls, remove buttons, order summary, and loading/empty/error states.
+  - Navbar cart badge reflecting real cart count.
 
 ## In progress
-- Phase 4 cart frontend and guest cart behavior are not started.
+- Phase 5: Checkout, orders, payments.
 
 ## Next up (in order)
-1. Phase 4: Cart frontend, guest cart behavior, and authenticated cart integration.
-2. First early deploy after the cart flow is complete.
+1. Phase 5: Checkout endpoint with Idempotency-Key, atomic stock decrement, Razorpay test mode, orders list/detail.
+2. First early deploy.
 
 ## Decisions made
 - Backend rewritten in Python FastAPI; Java Spring Boot backend is legacy.
