@@ -3,9 +3,9 @@
 HOW TO USE: Read this FIRST every session. UPDATE it at the END of every session (what was done, what is next, any problems). Keep it short and accurate. Stale context is worse than none.
 
 ## Current status
-- Current phase: **Phase 3 — Authentication** (Complete)
-- Last updated: 2026-10-22
-- Auth backend: complete (Supabase JWT verification via JWKS + PyJWT). Auth frontend: complete (Supabase client, AuthContext, Login, Signup, Navbar, Profile with GET /me, ProtectedRoute). Cart: not started. Checkout/payments: not started. Admin: not started.
+- Current phase: **Phase 4 — Cart** (Backend complete)
+- Last updated: 2026-10-25
+- Auth backend: complete (Supabase JWT verification via JWKS + PyJWT). Auth frontend: complete (Supabase client, AuthContext, Login, Signup, Navbar, Profile with GET /me, ProtectedRoute). Cart backend: complete with Postgres cart items, authenticated API routes, and migration `c3e8f941d2a0`. Cart frontend: not started. Checkout/payments: not started. Admin: not started.
 
 ## Completed
 - [x] Phase 1: FastAPI backend (`backend-fastapi`) scaffolded; real product models/API built from old `data.sql`; React frontend connected to local FastAPI; homepage loads 30 real products end-to-end.
@@ -41,11 +41,11 @@ HOW TO USE: Read this FIRST every session. UPDATE it at the END of every session
   - Production build verified with zero errors
 
 ## In progress
-- Nothing yet.
+- Phase 4 cart frontend and guest cart behavior are not started.
 
 ## Next up (in order)
-1. Phase 3: Authentication (Supabase Auth in frontend + FastAPI JWT verification + profiles table).
-2. First early deploy right after Phase 3.
+1. Phase 4: Cart frontend, guest cart behavior, and authenticated cart integration.
+2. First early deploy after the cart flow is complete.
 
 ## Decisions made
 - Backend rewritten in Python FastAPI; Java Spring Boot backend is legacy.
@@ -63,3 +63,4 @@ HOW TO USE: Read this FIRST every session. UPDATE it at the END of every session
 ## Session log
 - 2026-10-07: Defined final stack, wrote context files, installed JSM skills in Cursor.
 - 2026-10-22: Phase 2 complete — SQLite → Supabase Postgres. Full async stack (asyncpg + SQLAlchemy 2.0 + Alembic). 30 products seeded. End-to-end verified.
+- 2026-10-25: Built the cart backend using Supabase Postgres. Added the `cart_items` migration, atomic add route, owner scoped read and mutation routes, and tests. Migration `c3e8f941d2a0` is applied to Supabase.
