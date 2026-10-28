@@ -4,7 +4,7 @@ HOW TO USE: Read this FIRST every session. UPDATE it at the END of every session
 
 ## Current status
 - Current phase: **Phase 4 — Cart** (Backend & Frontend complete)
-- Last updated: 2026-10-27
+- Last updated: 2026-10-28
 - Auth backend: complete (Supabase JWT verification via JWKS + PyJWT). Auth frontend: complete (Supabase client, AuthContext, Login, Signup, Navbar, Profile with GET /me, ProtectedRoute). Cart backend: complete with Postgres cart items, authenticated API routes, and migration `c3e8f941d2a0`. Cart frontend: complete with API integration, ProductCard and ProductDetail Add-to-cart with auth redirection, Cart page (items, image, price, quantity controls, remove, subtotal), loading/empty/error states with over-stock error display. Checkout/payments: not started. Admin: not started.
 
 ## Completed
@@ -87,3 +87,4 @@ HOW TO USE: Read this FIRST every session. UPDATE it at the END of every session
 - 2026-10-27: Fixed orders endpoint 500 / Network error. Root cause: Order model mapped user_id with ForeignKey("auth.users.id"); because auth.users is external to SQLAlchemy's metadata, ORM flush failed with NoReferencedTableError, causing an unhandled 500 without CORS headers (blocked by browser as "Network error"), while migration e8d9a0b1c2d3 had not yet been applied. Fix: applied migration e8d9a0b1c2d3 and removed external ForeignKey from Order.user_id. Added test verifying create_order and serialization.
 - 2026-10-27: Fixed homepage bedroom category image. Replaced deleted Unsplash URL (404) with active bedroom image (photo-1616594039964-ae9021a400a0) and added onError fallback to suppress broken image icons in favor of neutral card placeholder backgrounds.
 - 2026-10-27: Secured WhatsApp contact. Replaced hardcoded personal phone number in Contact.jsx with REACT_APP_WHATSAPP_NUMBER environment variable, created frontend/.env.example, verified .env is gitignored, updated Contact Us button to "Chat on WhatsApp" with prefilled message opening in a new tab with rel="noopener noreferrer", and audited git history for the committed number.
+- 2026-10-28: Replaced WhatsApp contact with full-stack contact form. Added contact_messages table (migration 981b0404bdba), POST /api/v1/contact with Pydantic validation, honeypot bot trap, and in-memory IP rate limiting. Updated Contact.jsx with loading/success/error states, removed all wa.me links, WhatsApp buttons, and company phone numbers in favor of REACT_APP_CONTACT_EMAIL.
